@@ -1,16 +1,18 @@
-from audioop import add
 from typing import List
 import boto3
 
 
 class ecsUtils:
+    ''' Simple methods for interacting with ECS tasks w/in an account.'''
 
     def __init__(self, verbose_mode = False) -> None:
         self.ecs_client = boto3.client('ecs')
         self.verbose_mode = verbose_mode
 
-    def get_cluster_info(self, cluster_name) -> None:
-        # Print out cluster info (assume TestCluster1)
+    def get_cluster_info(self, cluster_name) -> list:
+        """
+            Print out cluster info (base boto wrapped call)
+        """ 
         response = self.ecs_client.describe_clusters( clusters = [cluster_name])
         if self.verbose_mode:
             print("## Cluster Info:")
@@ -24,7 +26,17 @@ class ecsUtils:
 
         return results
 
-    def get_task_arns(self, cluster_name, task_status) -> None:
+    def get_task_arns(self, cluster_name, task_status) -> list:
+        """
+            Retrieve all task arns for a given cluster (across all services)
+            Parameters:
+            cluster_name: the name of the cluster to use
+            task_status: STOPPED, etc..  Must be valid boto3 status
+
+            Returns:
+            list of task_arns
+        """ 
+
         if self.verbose_mode:
             print("### Pulling tasks")
 
@@ -41,7 +53,17 @@ class ecsUtils:
 
         return task_arns
 
-    def get_image_info_for_tasks(self, cluster_name, task_status) -> List:
+    def get_image_info_for_tasks(self, cluster_name, task_status) -> list:
+        """
+            Retrieve docker image info for all task arns for a given cluster (across all services)
+            Parameters:
+            cluster_name: the name of the cluster to use
+            task_status: STOPPED, etc..  Must be valid boto3 status
+
+            Returns:
+            list of docker image info (Name, digest, image) for the images running w/in the containers on the tasks
+        """
+
         task_arns = self.get_task_arns(cluster_name, task_status)
 
         if not task_arns:
@@ -51,7 +73,7 @@ class ecsUtils:
         # pull out the details of the tasks related to docker images
         if self.verbose_mode:
             print("### Pulling tasks details to find docker images")
-            
+
         task_descriptions = self.ecs_client.describe_tasks(cluster = cluster_name, tasks = task_arns)
         image_infos = []
 
@@ -62,7 +84,6 @@ class ecsUtils:
                     'Name' : a_container.get('name','N/A'), 
                     'image': a_container.get('image','N/A'), 
                     'imageDigest': a_container.get('imageDigest','N/A')}
-                # image_info = 'Name: {0} image: {1} imageDigest: {2}'.format(a_container.get('name','N/A'), a_container.get('image','N/A'), a_container.get('imageDigest','N/A'))
                 image_infos.append(image_info)
 
         return image_infos

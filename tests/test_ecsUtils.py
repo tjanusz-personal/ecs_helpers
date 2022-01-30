@@ -1,6 +1,4 @@
-from logging import critical
 import pytest
-from unittest import TestCase
 from botocore.stub import Stubber
 
 from ecshelpers.ecs_utils import ecsUtils
@@ -29,6 +27,12 @@ def test_get_cluster_info_validates_args(assertions, utils_instance):
     results = utils_instance.get_cluster_info('clusterName1')
     stubber.deactivate()
     assert len(results) == 1
+
+@pytest.mark.aws_integration
+def test_get_cluster_info_invokes_aws_correctly(assertions, utils_instance):
+    results = utils_instance.get_cluster_info("TestCluster1")
+    assertions.assertEqual(1, len(results))
+    assertions.assertIn('TestCluster1', results[0])
 
 
 def test_get_task_arns_returns_tasks_from_cluster(assertions, utils_instance):
@@ -109,4 +113,21 @@ def test_get_image_info_for_tasks_invokes_apis_correctly(assertions, utils_insta
     }
     assertions.assertEqual(expected_info, results[0])
 
+
+@pytest.mark.aws_integration
+def test_task_arns_invokes_aws_correctly(assertions, utils_instance):
+    results = utils_instance.get_task_arns("TestCluster1", "STOPPED")
+    assertions.assertTrue(len(results) >= 0)
+    # super bad test since this all depends on what's running on the cluster at the time!
+    # assertions.assertEqual(3, len(results))
+
+@pytest.mark.aws_integration
+def test_get_image_info_for_tasks(assertions, utils_instance):
+    results = utils_instance.get_image_info_for_tasks('TestCluster1', 'STOPPED')
+    assertions.assertTrue(len(results) >= 0)
+    # super bad test since this all depends on what's running on the cluster at the time! I only use this to regression test
+    # assertions.assertEqual('GtwSvcContainer', results[0]['Name'])
+    # assertions.assertIn('demo-tomcat', results[0]['image'])
+    # assertions.assertIn('sha256:', results[0]['imageDigest'])
+    # print(results[0])
 
