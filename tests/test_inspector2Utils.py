@@ -1,6 +1,4 @@
-from logging import critical
 import pytest
-from unittest import TestCase
 from botocore.stub import Stubber
 
 from ecshelpers.inspector2_utils import inspector2Utils as insp
@@ -96,3 +94,16 @@ def test_list_findings_for_invokes_aws_with_default_args(assertions, insp_instan
     image_digest = "sha256:d5e4"
     insp_instance.list_findings_for(image_digest)
     stubber.deactivate()
+
+@pytest.mark.aws_integration
+def test_list_findings_for_aws_integration(assertions, insp_instance):
+    image_sha = "sha256:d5e4eeeef5f2cb0382c3c452f715090bd56899494acdff910d0e6e901e23e3ee"
+    results = insp_instance.list_findings_for(image_sha)
+    summary_results = insp_instance.extract_from_findings(results)
+    assertions.assertEqual(10, len(summary_results))
+    # how many CRITICAL findings
+    critical_count = sum("Severity: CRITICAL" in s for s in summary_results)
+    assertions.assertEqual(6, critical_count)
+    # how many HIGH 
+    high_count = sum("Severity: HIGH" in s for s in summary_results)
+    assertions.assertEqual(4, high_count)
