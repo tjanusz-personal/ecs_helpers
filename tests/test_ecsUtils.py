@@ -1,7 +1,7 @@
 import pytest
 from botocore.stub import Stubber
-
 from ecshelpers.ecs_utils import ecsUtils
+import boto3
 
 # define some fixtures to make code cleaner
 @pytest.fixture
@@ -27,13 +27,6 @@ def test_get_cluster_info_validates_args(assertions, utils_instance):
     results = utils_instance.get_cluster_info('clusterName1')
     stubber.deactivate()
     assert len(results) == 1
-
-@pytest.mark.aws_integration
-def test_get_cluster_info_invokes_aws_correctly(assertions, utils_instance):
-    results = utils_instance.get_cluster_info("TestCluster1")
-    assertions.assertEqual(1, len(results))
-    assertions.assertIn('TestCluster1', results[0])
-
 
 def test_get_task_arns_returns_tasks_from_cluster(assertions, utils_instance):
     stubber = Stubber(utils_instance.ecs_client)
@@ -130,4 +123,12 @@ def test_get_image_info_for_tasks(assertions, utils_instance):
     # assertions.assertIn('demo-tomcat', results[0]['image'])
     # assertions.assertIn('sha256:', results[0]['imageDigest'])
     # print(results[0])
+
+@pytest.mark.aws_integration
+def test_get_cluster_info_with_config_invokes_aws_correctly(assertions):
+    # session = boto3.Session(profile_name='default')
+    utils_instance2 = ecsUtils(False, 'dev01')
+    results = utils_instance2.get_cluster_info("TestCluster1")
+    assertions.assertEqual(1, len(results))
+    assertions.assertIn('TestCluster1', results[0])
 

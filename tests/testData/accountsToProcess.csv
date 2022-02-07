@@ -1,0 +1,4 @@
+role_arn,account_id,region_name
+"arn:aws:sts::123456789012:assumed-role/Infosec-Role/ImageScanner","123456789012","us-east-1"
+"arn:aws:sts::222222222222:assumed-role/Infosec-Role/ImageScanner","222222222222","us-east-1"
+"arn:aws:sts::333333333333:assumed-role/Infosec-Role/ImageScanner","333333333333","us-east-1"

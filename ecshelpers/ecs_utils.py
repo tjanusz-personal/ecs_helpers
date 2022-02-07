@@ -1,12 +1,14 @@
 from typing import List
 import boto3
 
-
 class ecsUtils:
     ''' Simple methods for interacting with ECS tasks w/in an account.'''
 
-    def __init__(self, verbose_mode = False) -> None:
-        self.ecs_client = boto3.client('ecs')
+    def __init__(self, verbose_mode = False, aws_profile: str = 'default', session: boto3.Session = None) -> None:
+        if not session:
+            session = boto3.Session(profile_name=aws_profile)
+
+        self.ecs_client = session.client('ecs')
         self.verbose_mode = verbose_mode
 
     def get_cluster_info(self, cluster_name) -> list:

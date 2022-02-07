@@ -1,13 +1,13 @@
-from typing import Dict, List
 import boto3
-
 
 class inspector2Utils:
     ''' Simple methods for interacting with AWS insepctor2 w/in an account.'''
 
 
-    def __init__(self, verbose_mode = False) -> None:
-        self.insp_client = boto3.client('inspector2')
+    def __init__(self, verbose_mode = False, aws_profile: str = 'default', session: boto3.Session = None) -> None:
+        if not session:
+            session = boto3.Session(profile_name=aws_profile)
+        self.insp_client = session.client('inspector2')
         self.verbose_mode = verbose_mode
 
     def create_filter_criteria(self, imageDigest, severities) -> dict:

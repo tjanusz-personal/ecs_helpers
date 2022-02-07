@@ -1,7 +1,6 @@
 from typing import List
 import boto3
 import csv
-import codecs
 
 class dockerImageAnalyzer:
     ''' Simple methods for decomposing relevant info for the ECS docker images we need (e.g. image name, base image used, etc.'''
