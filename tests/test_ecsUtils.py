@@ -81,6 +81,7 @@ def test_get_image_info_for_tasks_invokes_apis_correctly(assertions, utils_insta
         'tasks': [
             {
                 'taskArn': 'arn:aws:ecs:us-west-2:123456789012:task/a1b2c3d4-5678-90ab-cdef-11111EXAMPLE',
+                'group' : 'service:GtwServiceDef',
                 'containers': [
                     {
                         'name': 'container1',
@@ -100,9 +101,10 @@ def test_get_image_info_for_tasks_invokes_apis_correctly(assertions, utils_insta
     results = utils_instance.get_image_info_for_tasks('TestCluster1', 'STOPPED')
     assert len(results) == 1
     expected_info = {
-        "Name": "container1",
-        "image": 'dockerImage1',
-        "imageDigest": 'sha256:d5e4'
+        "name": "container1",
+        "image": "dockerImage1",
+        "imageDigest": "sha256:d5e4",
+        "group": "service:GtwServiceDef"
     }
     assertions.assertEqual(expected_info, results[0])
 

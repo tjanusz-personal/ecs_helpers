@@ -10,6 +10,7 @@ Utils include:
  * **docker_image_analyzer** - extracts out docker image info from the full ECS returned image info string (e.g. image location, full tag, base tag)
  * **ecs_utils** - ECS cluster commands to look for running tasks and pull out docker files running in their container so can get image info
  * **inspector2_utils** - AWS inspector wrapper to look for listing of critical/high findings being reported for a given set of docker hashes
+ * **boto_session_creator** - Simple util for handling our cross account STS type requests
 
 # Assumptions
 This project assumes you have the following already intalled/configured

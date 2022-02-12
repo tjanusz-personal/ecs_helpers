@@ -80,12 +80,15 @@ class ecsUtils:
         image_infos = []
 
         for a_task_def in task_descriptions.get('tasks', []):
+            group_info = a_task_def.get('group', 'unknown')
             all_containers = a_task_def.get('containers', [])
             for a_container in all_containers:
                 image_info = { 
-                    'Name' : a_container.get('name','N/A'), 
+                    'name' : a_container.get('name','N/A'), 
                     'image': a_container.get('image','N/A'), 
-                    'imageDigest': a_container.get('imageDigest','N/A')}
+                    'imageDigest': a_container.get('imageDigest','N/A'),
+                    'group' : group_info
+                    }
                 image_infos.append(image_info)
 
         return image_infos

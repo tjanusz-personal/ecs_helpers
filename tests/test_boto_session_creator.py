@@ -65,5 +65,22 @@ def test_create_session_from_info_returns_boto_session_with_assumed_role_from_st
     assertions.assertEqual(pull_out_creds(results, 'secret_key'), "3x3x3x3x3x3x3x3x")
     assertions.assertEqual(pull_out_creds(results, 'token'), "2x2x2x2x2x2x2x2x")
 
+@pytest.mark.aws_integration
+def test_create_session_from_info_throws_error_on_invalid_cross_account_arn(assertions):
+    session_creator = bsc(False)
+    boto_sts=boto3.client('sts')
+    stubbed_info = {
+        'role_arn': 'arn:aws:sts::123456789012:assumed-role/Infosec-Role/ImageScanner',
+        'account_id': '111111111',
+        'region_name': 'us-east-1'
+    }
+    with pytest.raises(botocore.exceptions.ClientError) as exec_info:
+        session_creator.create_session_from_info(stubbed_info, boto_sts)
+    
+    assertions.assertEqual("AccessDenied", exec_info.value.response['Error']['Code'])
+    
+
 def pull_out_creds(results, cred_attr): 
     return results.__getattribute__('_session').__getattribute__('_credentials').__getattribute__(cred_attr)
+
+
