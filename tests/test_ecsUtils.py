@@ -82,6 +82,7 @@ def test_get_image_info_for_tasks_invokes_apis_correctly(assertions, utils_insta
             {
                 'taskArn': 'arn:aws:ecs:us-west-2:123456789012:task/a1b2c3d4-5678-90ab-cdef-11111EXAMPLE',
                 'group' : 'service:GtwServiceDef',
+                'clusterArn': 'arn:aws:ecs:us-east-1:123456789012:cluster/TestCluster1',
                 'containers': [
                     {
                         'name': 'container1',
@@ -104,7 +105,9 @@ def test_get_image_info_for_tasks_invokes_apis_correctly(assertions, utils_insta
         "name": "container1",
         "image": "dockerImage1",
         "imageDigest": "sha256:d5e4",
-        "group": "service:GtwServiceDef"
+        "group": "service:GtwServiceDef",
+        "cluster_arn": "arn:aws:ecs:us-east-1:123456789012:cluster/TestCluster1",
+        "account_id": "123456789012"
     }
     assertions.assertEqual(expected_info, results[0])
 
@@ -134,3 +137,11 @@ def test_get_cluster_info_with_config_invokes_aws_correctly(assertions):
     assertions.assertEqual(1, len(results))
     assertions.assertIn('TestCluster1', results[0])
 
+def test_extract_account_id_from_cluster_arn(assertions, utils_instance):
+    account_id = utils_instance.extract_account_id_from_cluster_arn("arn:aws:ecs:us-east-1:123456789012:cluster/TestCluster1")
+    assertions.assertEqual("123456789012", account_id)
+
+@pytest.mark.parametrize("cluster_arn", [ "arn:aws:ecs:us-east-1", "", "arn:aws:", "someStringWithNoColons"])
+def test_extract_account_id_from_cluster_arn_returns_unknown(cluster_arn, assertions, utils_instance):
+    account_id = utils_instance.extract_account_id_from_cluster_arn(cluster_arn)
+    assertions.assertEqual("unknown", account_id)

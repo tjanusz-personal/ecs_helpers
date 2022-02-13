@@ -45,11 +45,11 @@ def test_print_current_base_image_statuses(assertions, dia_instance, utils_insta
         result = dia_instance.image_matches_current_bases(task_result['image'], base_images)
         task_result['validBaseImage'] = result
     
-    # field_names = ['name', 'group', 'validBaseImage', 'image', 'imageDigest']
-    # with open('test4.csv', 'w') as csvfile:
-    #     writer = csv.DictWriter(csvfile, fieldnames = field_names)
-    #     writer.writeheader()
-    #     writer.writerows(task_results)
+    field_names = ['account_id', 'name', 'group', 'validBaseImage', 'image', 'imageDigest', 'cluster_arn']
+    with open('test4.csv', 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames = field_names)
+        writer.writeheader()
+        writer.writerows(task_results)
 
     print(task_results)
 

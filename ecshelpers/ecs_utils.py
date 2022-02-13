@@ -81,14 +81,25 @@ class ecsUtils:
 
         for a_task_def in task_descriptions.get('tasks', []):
             group_info = a_task_def.get('group', 'unknown')
+            cluster_arn = a_task_def.get('clusterArn', 'unknown')
+            account_id = self.extract_account_id_from_cluster_arn(cluster_arn)
             all_containers = a_task_def.get('containers', [])
             for a_container in all_containers:
                 image_info = { 
                     'name' : a_container.get('name','N/A'), 
                     'image': a_container.get('image','N/A'), 
                     'imageDigest': a_container.get('imageDigest','N/A'),
-                    'group' : group_info
+                    'group' : group_info,
+                    'cluster_arn': cluster_arn,
+                    'account_id': account_id
                     }
                 image_infos.append(image_info)
 
         return image_infos
+
+    def extract_account_id_from_cluster_arn(self, cluster_arn) -> str:
+        # "arn:aws:ecs:us-east-1:123456789012:cluster/TestCluster1"
+        tokens = cluster_arn.split(":")
+        if len(tokens) > 5:
+            return tokens[4]
+        return "unknown"
