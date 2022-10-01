@@ -83,3 +83,22 @@ python -m pytest tests -s -m aws_integration --aws_integration
 python -m pytest tests/test_inspector2Utils.py -s -m aws_integration --aws_integration
 ```
 
+## Code Scanning Tooling
+The project also includes some code scanning tooling to look for various coding errors.
+
+Tools included:
+* **Prospector** - [runs dodgy, mccabe, pylint, pyflakes, etc.](https://pypi.org/project/prospector/)
+* **Safety check** - [looks for CVEs](https://pypi.org/project/safety/)
+* **bandit** - [looks for security issues w/in code](https://bandit.readthedocs.io/en/latest/)
+
+```bash
+# run prospector (runs dodgy, mccabe, profile-validator, pycodestyle, pyflakes, pylint)
+prospector 
+
+# run safety check (looks for CVE w/in dependencies - opens source version only)
+safety check
+
+# run bandit (with configuration file)
+bandit -c bandit.yaml -r .
+```
+

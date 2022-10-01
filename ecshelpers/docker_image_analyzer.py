@@ -1,7 +1,5 @@
-from typing import List
 import boto3
 import csv
-import codecs
 
 class dockerImageAnalyzer:
     ''' Simple methods for decomposing relevant info for the ECS docker images we need (e.g. image name, base image used, etc.'''
@@ -12,9 +10,10 @@ class dockerImageAnalyzer:
     def extract_image_info(self, full_image_string) -> dict[str, str]:
         """
             Extract out the different parts of the image we need (e.g. tag, base, repo)
-            Our tagging strategy includes base image info w/in it so using the full tag name permits us to know the base image w/out having to inspect dockerfile.
-            Right now we only need to know which docker images have CVEs on them but we will need to also compare to what our valid base image names are too to 
-            find out which running images need to be rebuilt/patched.
+            Our tagging strategy includes base image info w/in it so using the full tag name permits us to know the base image w/out having to inspect
+            dockerfile.
+            Right now we only need to know which docker images have CVEs on them but we will need to also compare to what our valid base image names
+            are too to find out which running images need to be rebuilt/patched.
         """
 
         # devImageInfo = "99999999.dkr.ecr.us-east-1.amazonaws.com/pets/dev/pets-ui:feature__feat1-build30-dev01_base-14.17.6_2022.01.13-slim"
