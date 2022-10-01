@@ -1,4 +1,3 @@
-from typing import Dict, List
 import boto3
 
 
@@ -47,13 +46,10 @@ class inspector2Utils:
         for finding in findings:
             acctId = finding.get('awsAccountId', 'N/A')
             severity = finding.get('severity', 'N/A')
-            desc = finding.get('description', 'N/A')
+            # desc = finding.get('description', 'N/A')
             title = finding.get('title', 'N/A')
-            type = finding.get('type', 'N/A')
-            result = 'AccountId: {0} Severity: {1} Type: {2}, Title: {3} '.format(acctId, severity, type, title)
+            type_val = finding.get('type', 'N/A')
+            result = f"AccountId: {acctId} Severity: {severity} Type: {type_val}, Title: {title} "
             # print(result)
             finding_summary.append(result)
         return finding_summary
-
-
-

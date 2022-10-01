@@ -1,4 +1,3 @@
-from typing import List
 import boto3
 
 
@@ -19,7 +18,7 @@ class ecsUtils:
         
         results = []
         for a_cluster in response.get('clusters', []):
-            cluster_info = 'Name: {0} Arn: {1}'.format(a_cluster.get('clusterName', 'N/A'), a_cluster.get('clusterArn', 'N/A'))
+            cluster_info = f"Name: {a_cluster.get('clusterName', 'N/A')} Arn: {a_cluster.get('clusterArn', 'N/A')}"
             results.append(cluster_info)
             if self.verbose_mode:
                 print(cluster_info)
@@ -46,7 +45,7 @@ class ecsUtils:
             print(ecs_tasks)
 
         # collect up task arns
-        task_arns = [i for i in ecs_tasks.get('taskArns', [])]
+        task_arns = list(ecs_tasks.get('taskArns', []))
         if self.verbose_mode:
             for a_task_arn in task_arns:
                 print(a_task_arn)

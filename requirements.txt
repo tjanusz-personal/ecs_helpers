@@ -1,2 +1,5 @@
 boto3
-pytest==6.2.2
+pytest==6.2.5
+prospector
+safety
+bandit

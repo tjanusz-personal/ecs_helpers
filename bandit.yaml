@@ -1,0 +1,6 @@
+# sample bandit yaml file
+
+# exclude all tests and virutal_env locations
+exclude_dirs: ['tests', 'python_virtualenvs']
+tests: ['B201', 'B301']
+skips: ['B101', 'B601']

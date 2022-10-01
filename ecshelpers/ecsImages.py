@@ -1,4 +1,4 @@
-import boto3
+# import boto3
 
 import ecs_utils as ecs
 import inspector2_utils as insp2
@@ -23,4 +23,3 @@ image_digest = 'sha256:d5e4eeeef5f2cb0382c3c452f715090bd56899494acdff910d0e6e901
 results = insp2_inst.list_findings_for(image_digest)
 sum_results = insp2_inst.extract_from_findings(results)
 print(sum_results)
-
